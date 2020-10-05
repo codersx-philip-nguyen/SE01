@@ -1,0 +1,10 @@
+Builder pattern:
+=================
+Separate the construction of a complex object from its representation so that the same construction 
+process can create different different representations.
+
+It consists of a Directory class (the client) and a Builder interface that is to 
+be implemented by concrete builder classes. 
+
+From example, a RTFReader class would uses different TextConverter such as ASCIIConverter, TeXConverter, 
+etc. to convert a given document without having to know these specific converters. 

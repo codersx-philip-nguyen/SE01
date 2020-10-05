@@ -1,0 +1,9 @@
+To run the KEngine test drivers, following these steps:
+
+1/ Extract the data zip file to a local directory, e.g. C:\temp. This will create a sub-directory C:\temp\data containing all the data sub-directories and files. Let's call this directory DATA.
+2/ Update the kengine.properties file to point to DATA
+- in Eclipse, this file is located in the package kengine.
+- change the value of the property test.dir to the full path of DATA. Note that if you are using Windows, the path value must contain an extra escape character for the path separator  (e.g. C:\\temp\\data)
+- (if necessary) re-compile the project
+
+Now, when you run a test driver/suite in the test package, they will automatically use the test data files in the DATA directory. 

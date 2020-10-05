@@ -1,0 +1,11 @@
+Prototype pattern:
+=================
+Specify the kinds to objects to create using a prototypical instance, and create
+new objects by copying this prototype.
+
+It consists of a Client class and a Prototype interface that is to 
+be implemented by concrete prototype classes specific to the needs of a given application.  
+
+From example, a GraphicTool class of a musical editor application would 
+take a concrete Prototype object called MusicalNote to manipulate this object on 
+a graphical user interface.  
