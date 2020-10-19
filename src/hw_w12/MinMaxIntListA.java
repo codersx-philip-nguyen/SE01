@@ -10,14 +10,14 @@ import utils.DomainConstraint;
  * min Integer
  * max Integer
  */
-public class MinMaxIntList extends ArrayList<Integer> {
+public class MinMaxIntListA extends ArrayList<Integer> {
 	
 	@DomainConstraint(type="Integer")
 	private Integer min;
 	@DomainConstraint(type="Integer")
 	private Integer max;
 	
-	public MinMaxIntList() {
+	public MinMaxIntListA() {
 		super();
 	}
 	
@@ -41,6 +41,7 @@ public class MinMaxIntList extends ArrayList<Integer> {
 			max = e;
 			return true;
 		}
+		
 		super.add(e);
 		
 		return false;

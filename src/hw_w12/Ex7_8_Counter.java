@@ -30,7 +30,7 @@ public class Ex7_8_Counter {
      * @effects
      *      return count
      */
-    public int get(){
+    public int getCounter(){
         return count;
     }
 

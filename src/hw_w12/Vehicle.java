@@ -1,11 +1,10 @@
-package hw_w3;
+package hw_w12;
 
 import static utils.DomainConstraint.ZERO_PLUS;
 
 import utils.AttrRef;
 import utils.DOpt;
 import utils.DomainConstraint;
-import utils.NotPossibleException;
 import utils.OptType;
 
 /**
@@ -18,16 +17,18 @@ import utils.OptType;
  *  length  Double
  *  weight  Double
  *  seatingCapacity Integer
+ *  registrationNumber  String
  * @object
- *  A typical Vehicle is <pre>v = < n,d,h,l,w,c ></pre>, where
- *    <pre>name(n), width(d), height(h), length(l), weight(w), seatingCapacity(c)</pre>
+ *  A typical Vehicle is <pre>v = < n,d,h,l,w,c,r></pre>, where
+ *    <pre>name(n), width(d), height(h), length(l), weight(w), seatingCapacity(c), registrationNumber(r)</pre>
  * @abstract_properties
  *    mutable(name)=true /\ optional(name)=false /\ 
  *    mutable(width)=true /\ optional(width)=false /\ min(width)=0+ /\
  *    mutable(height)=true /\ optional(height)=false /\ min(height)=0+ /\ 
  *    mutable(length)=true /\ optional(length)=false /\ min(length)=0+ /\
  *    mutable(weight)=true /\ optional(weight)=false /\ min(weight)=0+ /\ 
- *    mutable(seatingCapacity)=true /\ optional(seatingCapacity)=false /\ min(seatingCapacity)=1 /\ 
+ *    mutable(seatingCapacity)=true /\ optional(seatingCapacity)=false /\ min(seatingCapacity)=1 /\
+ *    mutable(registrationNumber)=false /\ optional(registrationNumber)=false /\ length(registrationNumber)=12
  * @author dmle
  */
 public class Vehicle {
@@ -43,6 +44,8 @@ public class Vehicle {
   private double weight;
   @DomainConstraint(type="Integer",min=1,optional=false)
   private int seatingCapacity;
+  @DomainConstraint(type="String",mutable = false,optional = false,length = 12)
+  private String registrationNumber;
 
   // constructor methods
   /**
@@ -55,22 +58,18 @@ public class Vehicle {
    */
   public Vehicle(@AttrRef("name") String n, 
       @AttrRef("width") double d, @AttrRef("height") double h, @AttrRef("length") double l, 
-      @AttrRef("weight") double w, @AttrRef("seatingCapacity") int c) {
-    try {
-      if (validate(n, d, h, l, w, c)) {
-        name = n;
-        width = d;
-        height = h;
-        length = l;
-        weight = w;
-        seatingCapacity = c;
-      } else {
-        throw new NotPossibleException("Vehicle<init>: invalid arguments");
-      }
-    } catch (Exception e) {
-      System.out.println("Vehicle<init>: invalid arguments");
+      @AttrRef("weight") double w, @AttrRef("seatingCapacity") int c, @AttrRef("registrationNumber") String r) {
+    if (validate(n, d, h, l, w, c, r)) {
+      name = n;
+      width = d;
+      height = h;
+      length = l;
+      weight = w;
+      seatingCapacity = c;
+      registrationNumber = r;
+    } else {
+      System.err.println("Vehicle<init>: invalid arguments");
     }
-
   }
 
   // methods
@@ -91,15 +90,10 @@ public class Vehicle {
    */
   @DOpt(type=OptType.Mutator) @AttrRef("name")
   public void setName(String name) {
-    try{
-      if (validateName(name))
-        this.name = name;
-      else
-        System.err.println("Vehicle.setName: invalid name: " + name);
-    } catch (Exception e) {
-      System.out.println("Invalid name");
-    }
-
+    if (validateName(name))
+      this.name = name;
+    else
+      System.err.println("Vehicle.setName: invalid name: " + name);
   }
 
   /**
@@ -119,15 +113,10 @@ public class Vehicle {
    */
   @DOpt(type=OptType.Mutator) @AttrRef("width")
   public void setWidth(double width) {
-    try {
-      if (validateDimension(width))
-        this.width = width;
-      else
-        System.err.println("Vehicle.setWidth: invalid width " + width);
-    } catch (Exception e){
-      System.out.println(e.toString());
-    }
-
+    if (validateDimension(width))
+      this.width = width;
+    else
+      System.err.println("Vehicle.setWidth: invalid width " + width);
   }
 
   /**
@@ -147,15 +136,10 @@ public class Vehicle {
    */
   @DOpt(type=OptType.Mutator) @AttrRef("height")
   public void setHeight(double height) {
-    try{
-      if (validateDimension(height))
-        this.height = height;
-      else
-        System.err.println("Vehicle.setHeight: invalid height: " + height);
-    } catch (Exception e){
-      System.out.println(e.toString());
-    }
-
+    if (validateDimension(height))
+      this.height = height;
+    else
+      System.err.println("Vehicle.setHeight: invalid height: " + height);
   }
 
   /**
@@ -175,15 +159,10 @@ public class Vehicle {
    */
   @DOpt(type=OptType.Mutator) @AttrRef("length")
   public void setLength(double length) {
-    try {
-      if (validateDimension(length))
-        this.length = length;
-      else
-        System.err.println("Vehicle.setLength: invalid length " + length);
-    } catch (Exception e){
-      System.out.println(e.toString());
-    }
-
+    if (validateLength(length))
+      this.length = length;
+    else
+      System.err.println("Vehicle.setLength: invalid length " + length);
   }
 
   /**
@@ -233,6 +212,14 @@ public class Vehicle {
   }
 
   /**
+   * @effects return <tt>this.registrationNumber</tt>
+   */
+  @DOpt(type=OptType.Observer) @AttrRef("registrationNumber")
+  public String getRegistrationNumber() {
+    return registrationNumber;
+  }
+
+  /**
    * @effects return the total weight (in kilograms) as the sum of weight and
    *          the estimated passengers weight
    */
@@ -243,6 +230,15 @@ public class Vehicle {
   }
 
   /**
+   * @effect print message to the console information about the travelling i.e the type of vehicle,
+   *         starting location and number of seats
+   */
+  public void travel(String startPoint, String endPoint, int numberOfSeats){
+      System.out.printf("This vehicle: %s is going from %s to %s, with number of seats are %d"
+                        , toString(), startPoint, endPoint, numberOfSeats);
+  }
+
+  /**
    * @effects <pre>
    *            if this satisfies rep invariant
    *              return true 
@@ -250,12 +246,12 @@ public class Vehicle {
    *              return false</pre>
    */
   public boolean repOK() {
-    return validate(name, width, height, length, weight, seatingCapacity);
+    return validate(name, width, height, length, weight, seatingCapacity, registrationNumber);
   }
 
   @Override
   public String toString() {
-    return "Vehicle(" + name + ")";
+    return "" + this.getClass().getSimpleName() +  "(" + name + ")";
   }
 
   // validation methods
@@ -267,10 +263,10 @@ public class Vehicle {
    *              return false </pre>
    */
   private boolean validate(String n, double d, double h, double l, double w,
-      int c) {
+      int c,String r) {
     return validateName(n) && 
-      validateDimension(d) && validateDimension(h) && validateDimension(l) && 
-      validateWeight(w) && validateSeatingCapacity(c);
+      validateDimension(d) && validateDimension(h) && validateLength(l) &&
+      validateWeight(w) && validateSeatingCapacity(c) && validateRegistrationNumber(r);
   }
 
   /**
@@ -317,15 +313,43 @@ public class Vehicle {
 
   /**
    * @effects <pre>
-   *            if c is valid 
-   *              return true 
-   *            else 
-   *              return false</pre> 
+   *   if l is valid
+   *     return true
+   *   else
+   *     return false</pre>
+   */
+  protected boolean validateLength(double l) {
+    if (l <= 0)
+      return false;
+    else
+      return true;
+  }
+
+  /**
+   * @effects <pre>
+   *            if c is valid
+   *              return true
+   *            else
+   *              return false</pre>
    */
   protected boolean validateSeatingCapacity(int c) {
     if (c <= 0)
       return false;
-    else 
+    else
       return true;
+  }
+
+  /**
+   * @effects <pre>
+   *            if c is valid
+   *              return true
+   *            else
+   *              return false</pre>
+   */
+  protected boolean validateRegistrationNumber(String r) {
+    if (r != null && r.length() > 0 && r.length() <= 12)
+      return true;
+    else
+      return false;
   }
 }

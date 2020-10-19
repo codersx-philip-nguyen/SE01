@@ -12,13 +12,13 @@ import utils.OptType;
  * @abstract_properties
  * P_Ex7_8_Counter
  */
-public class Ex7_10_Counter extends Ex7_8_Counter{
+public class Ex7_10_Counter3 extends Ex7_8_Counter{
     /**
      * @effects <pre>
      *              initialise this as Ex7_9_Counter2:<count>
      *          </pre>
      */
-    public Ex7_10_Counter(@AttrRef("count") int count){
+    public Ex7_10_Counter3(@AttrRef("count") int count){
         super.count = count;
     }
 
@@ -31,9 +31,7 @@ public class Ex7_10_Counter extends Ex7_8_Counter{
      */
     public void incr(int n){
         /*
-        with this operation, Ex7_10_Counter3 has violated the substitution principle by adding
-        more parameters than the supertype ones
-        => Counter3 is not a legit subtype
+        Counter3 is not a legit subtype because it adds more params than supertype => violate subsitution principle
          */
         count += n;
     }
