@@ -1,4 +1,4 @@
-package hw_w5;
+package hw_w5_6;
 
 public class test_cases {
 	//Link to spread sheet: 
