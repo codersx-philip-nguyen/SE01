@@ -49,8 +49,6 @@ public class Bus extends Vehicle {
   @Override
   @DomainConstraint(type="Double",min=MIN_WEIGHT,max=MAX_WEIGHT,optional=false)
   protected boolean validateWeight(double w) {
-    // not needed: super.validateWeight(w);
-    
     if (w < MIN_WEIGHT || w > MAX_WEIGHT)
       return false;
     else // means: w >= MIN_WEIGHT -> w > 0
